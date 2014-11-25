@@ -19,6 +19,6 @@ exports.expectedObjectWithNot = function expectedObjectWithNot(actual, pass, obj
     } catch (e) {
         actual = 'actual';
     }
-    return 'Expected ' + actual + (pass ? '' : ' not' );
+    return 'Expected ' + actual + (!pass ? '' : ' not' );
 };
 
