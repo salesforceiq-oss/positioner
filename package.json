@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/relateiq/jasmine-tools-riq",
   "devDependencies": {
+    "gulp": "^3.8.10",
     "gulp-tasks-riq": "^0.1.2"
   }
 }
