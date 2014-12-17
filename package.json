@@ -1,24 +1,27 @@
 {
-  "name": "jasmine-tools-riq",
-  "version": "0.0.0",
-  "description": "common jasmine tools and matchers for RelateIQ development",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/relateiq/jasmine-tools-riq.git"
-  },
-  "keywords": [
-    "jasmine",
-    "testing",
-    "bdd"
-  ],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/relateiq/jasmine-tools-riq/issues"
-  },
-  "homepage": "https://github.com/relateiq/jasmine-tools-riq"
+    "name": "jasmine-tools-riq",
+    "version": "0.0.0",
+    "publishConfig": {
+        "registry": "https://relateiq.artifactoryonline.com/relateiq/api/npm/npm-local"
+    },
+    "description": "common jasmine tools and matchers for RelateIQ development",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/relateiq/jasmine-tools-riq.git"
+    },
+    "keywords": [
+        "jasmine",
+        "testing",
+        "bdd"
+    ],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/relateiq/jasmine-tools-riq/issues"
+    },
+    "homepage": "https://github.com/relateiq/jasmine-tools-riq"
 }
