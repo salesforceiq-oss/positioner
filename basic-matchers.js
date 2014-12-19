@@ -76,7 +76,14 @@
                     };
                 }
             };
-        }
+        },
+        toHaveOnlyTruthyProperty: tools.defineBasicMatcher(function (actual, propertyName) {
+            return Object.keys(this).every(function (key) {
+                return key === propertyName ? !!this[key] : !this[key];
+            }, function (actual, expected, pass) {
+                return 'Expected "' + propertyName + '"' + (pass ? ' not' : '') + ' to be only truthy value of the given object.';
+            });
+        })
 
     };
 
