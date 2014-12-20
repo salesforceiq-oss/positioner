@@ -77,6 +77,40 @@
                 }
             };
         },
+        toBeDisplayNone: tools.defineBasicMatcher(function (actual) {
+            var elem = actual;
+            return jasmine.getEnv().equals_(elem.css('display'), ('none'));
+        }),
+
+        //determines visibillity based on display none for now irrespective of attachement to the document
+        toBeVisible: tools.defineBasicMatcher(function (actual) {
+            var element = actual;
+            if (!element || !angular.isFunction(element.parent)) {
+                return false;
+            }
+            var lastParent = element;
+            do {
+                if (lastParent.length === 0 || lastParent.css('display') === 'none' || lastParent.hasClass('ng-hide')) {
+                    return false;
+                }
+                lastParent = lastParent.parent();
+            } while (lastParent.length > 0);
+            return true;
+        }),
+        toContainReference: tools.defineBasicMatcher(function (actual, val) {
+            return actual.any(function (item) {
+                return val === item;
+            });
+        }),
+
+        toBeDisabled: tools.defineBasicMatcher(function (actual) {
+            var disabled = actual.attr('disabled');
+            return disabled === true || disabled === 'true' || disabled === 'disabled';
+        }),
+
+        toContainAny: tools.defineBasicMatcher(function (actual, val) {
+            return angular.isFunction(actual.any) && actual.any(val);
+        }),
         toHaveOnlyTruthyProperty: tools.defineBasicMatcher(
             function (actual, propertyName, includeFunctionReturnValues) {
                 return Object.keys(actual).every(function (key) {
