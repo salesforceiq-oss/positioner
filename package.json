@@ -27,5 +27,8 @@
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-tasks-riq": "^0.1.2"
+  },
+  "dependencies": {
+    "jquery": "^2.1.3"
   }
 }
