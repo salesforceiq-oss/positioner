@@ -77,14 +77,17 @@
                 }
             };
         },
-        toHaveOnlyTruthyProperty: tools.defineBasicMatcher(function (actual, propertyName, includeFunctionReturnValues) {
-            return Object.keys(this).every(function (key) {
-                var value = typeof this[key] === 'function' && includeFunctionReturnValues ? this[key]() : this[key];
-                return key === propertyName ? !!value : !value;
-            }, function (actual, expected, pass) {
+        toHaveOnlyTruthyProperty: tools.defineBasicMatcher(
+            function (actual, propertyName, includeFunctionReturnValues) {
+                return Object.keys(actual).every(function (key) {
+                    var value = typeof actual[key] === 'function' && includeFunctionReturnValues ? actual[key]() : actual[key];
+                    return key === propertyName ? !!value : !value;
+                });
+            },
+            function (actual, propertyName, includeFunctionReturnValues, pass) {
                 return 'Expected "' + propertyName + '"' + (pass ? ' not' : '') + ' to be only truthy value of the given object.';
-            });
-        })
+            }
+        )
 
     };
 

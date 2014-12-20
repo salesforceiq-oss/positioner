@@ -3,10 +3,13 @@ exports.defineBasicMatcher =
         return function () {
             return {
                 compare: function (actual, expected) {
-                    var pass = passFn(actual, expected);
+                    var argsArray = Array.prototype.slice.call(arguments);
+                    var pass = passFn.apply(this, argsArray);
+                    argsArray.push(pass);
+
                     return {
                         pass: pass,
-                        message: messageFn && messageFn(actual, expected, pass)
+                        message: messageFn && messageFn.apply(this, argsArray)
                     };
                 }
             };
