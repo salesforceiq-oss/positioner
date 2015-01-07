@@ -27,12 +27,17 @@ exports.expectedObjectWithNot = function expectedObjectWithNot(actual, pass, obj
 
 exports.angularDeps = function () {
     var self = this;
-    var depNames = Array.prototype.slice.call(arguments, 0);
-    depNames.push(function actualInjectedFunction() {
-        var depsArray = Array.prototype.slice.call(arguments, 0);
-        depsArray.forEach(function (dep, i) {
-            self[depNames[i]] = dep;
+
+    try {
+        var depNames = Array.prototype.slice.call(arguments, 0);
+        depNames.push(function actualInjectedFunction() {
+            var depsArray = Array.prototype.slice.call(arguments, 0);
+            depsArray.forEach(function (dep, i) {
+                self[depNames[i]] = dep;
+            });
         });
-    });
-    inject.call(this, depNames)
+        inject.call(this, depNames);
+    } catch (e) {
+        console.log(e);
+    }
 };
