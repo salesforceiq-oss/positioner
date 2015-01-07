@@ -1,6 +1,6 @@
 {
   "name": "jasmine-tools-riq",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "publishConfig": {
     "registry": "https://relateiq.artifactoryonline.com/relateiq/api/npm/npm-local/jasmine-tools-riq"
   },
