@@ -41,3 +41,15 @@ exports.angularDeps = function () {
         console.log(e);
     }
 };
+
+exports.lazyLoad = function (obj, name, createFn) {
+    var prop;
+    Object.defineProperty(obj, name, {
+        get: function () {
+            if (!prop) {
+                prop = createFn();
+            }
+            return prop;
+        }
+    })
+};
