@@ -12,6 +12,25 @@
     var $ = require('jquery');
     var tools = require('./index.js');
 
+    var passFn = function (actual, array) {
+        array.forEach(function (item) {
+            if (actual.indexOf(item) === -1) {
+                return false;
+            }
+        });
+        return true;
+    };
+
+
+    function containAll(actual, array) {
+        array.forEach(function (item) {
+            if (actual.indexOf(item) === -1) {
+                return false;
+            }
+        });
+        return true;
+    }
+
     var matchers = {
 
         toBeANumber: tools.defineBasicMatcher(function (actual) {
@@ -36,21 +55,17 @@
         }),
         toBeAnElement: tools.defineBasicMatcher(function (actual) {
             return !!(actual &&
-                (actual.nodeName || // we are a direct element
-                    (actual.prop && actual.attr && actual.find)));
+            (actual.nodeName || // we are a direct element
+            (actual.prop && actual.attr && actual.find)));
         }),
         toHaveField: tools.defineBasicMatcher(function (actual, exp) {
             return exp in actual;
         }, function (actual, exp, pass) {
             return tools.expectedObjectWithNot(actual, pass) + ' to have field: ' + exp;
         }),
-        toContainAll: tools.defineBasicMatcher(function (actual, array) {
-            array.forEach(function (item) {
-                if (actual.indexOf(item) === -1) {
-                    return false;
-                }
-            });
-            return true;
+        toContainAll: tools.defineBasicMatcher(containAll),
+        toContainOnly: tools.defineBasicMatcher(function (actual, array) {
+            return actual.length === array.length && containAll(actual, array);
         }),
         toHaveClass: tools.defineBasicMatcher(function (actual, className) {
             return $(actual).hasClass(className);
