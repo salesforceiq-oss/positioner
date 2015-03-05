@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 exports.defineBasicMatcher =
     function defineBasicMatcher(passFn, messageFn) {
         return function () {
@@ -52,4 +54,16 @@ exports.lazyLoad = function (obj, name, createFn) {
             return prop;
         }
     })
+};
+
+exports.findDTS = function (dts) {
+    return $('[dts="' + dts + '"]');
+};
+
+exports.findDTSWithinElement = function (element, dts) {
+    return element.find('[dts="' + dts + '"]');
+};
+
+exports.findDTSIn$Element = function (self, dts) {
+    return findDTSWithinElement(self.$element, dts);
 };
