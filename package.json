@@ -1,6 +1,6 @@
 {
     "name": "jasmine-tools-riq",
-    "version": "0.1.14",
+    "version": "0.1.15",
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
