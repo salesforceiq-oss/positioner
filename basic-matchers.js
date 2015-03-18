@@ -1,7 +1,12 @@
-(function () {
+(function() {
 
     function makeFakePosRange(t, l, r, b) {
-        return {top: t, left: l, right: r, bottom: b};
+        return {
+            top: t,
+            left: l,
+            right: r,
+            bottom: b
+        };
     }
 
     function maybeAddPx(v) {
@@ -12,8 +17,8 @@
     var $ = require('jquery');
     var tools = require('./index.js');
 
-    var passFn = function (actual, array) {
-        array.forEach(function (item) {
+    var passFn = function(actual, array) {
+        array.forEach(function(item) {
             if (actual.indexOf(item) === -1) {
                 return false;
             }
@@ -23,7 +28,7 @@
 
 
     function containAll(actual, array) {
-        array.forEach(function (item) {
+        array.forEach(function(item) {
             if (actual.indexOf(item) === -1) {
                 return false;
             }
@@ -33,43 +38,43 @@
 
     var matchers = {
 
-        toBeANumber: tools.defineBasicMatcher(function (actual) {
+        toBeANumber: tools.defineBasicMatcher(function(actual) {
             return angular.isNumber(actual);
         }),
-        toBeAFunction: tools.defineBasicMatcher(function (actual) {
+        toBeAFunction: tools.defineBasicMatcher(function(actual) {
             return angular.isFunction(actual);
         }),
 
-        toBeAnObject: tools.defineBasicMatcher(function (actual) {
+        toBeAnObject: tools.defineBasicMatcher(function(actual) {
             return angular.isObject(actual);
         }),
 
-        toBeAnArray: tools.defineBasicMatcher(function (actual) {
+        toBeAnArray: tools.defineBasicMatcher(function(actual) {
             return angular.isArray(actual);
         }),
-        toBeAString: tools.defineBasicMatcher(function (actual) {
+        toBeAString: tools.defineBasicMatcher(function(actual) {
             return angular.isString(actual);
         }),
-        toBeNully: tools.defineBasicMatcher(function (actual) {
+        toBeNully: tools.defineBasicMatcher(function(actual) {
             return actual === undefined || actual === null;
         }),
-        toBeAnElement: tools.defineBasicMatcher(function (actual) {
+        toBeAnElement: tools.defineBasicMatcher(function(actual) {
             return !!(actual &&
-            (actual.nodeName || // we are a direct element
-            (actual.prop && actual.attr && actual.find)));
+                (actual.nodeName || // we are a direct element
+                    (actual.prop && actual.attr && actual.find)));
         }),
-        toHaveField: tools.defineBasicMatcher(function (actual, exp) {
+        toHaveField: tools.defineBasicMatcher(function(actual, exp) {
             return exp in actual;
-        }, function (actual, exp, pass) {
+        }, function(actual, exp, pass) {
             return tools.expectedObjectWithNot(actual, pass) + ' to have field: ' + exp;
         }),
         toContainAll: tools.defineBasicMatcher(containAll),
-        toContainOnly: tools.defineBasicMatcher(function (actual, array) {
+        toContainOnly: tools.defineBasicMatcher(function(actual, array) {
             return actual.length === array.length && containAll(actual, array);
         }),
-        toBePositioned: function () {
+        toBePositioned: function() {
             return {
-                compare: function (actual, t, l, b, r) {
+                compare: function(actual, t, l, b, r) {
                     var top = $(actual).css('top');
                     var left = $(actual).css('left');
                     var right = $(actual).css('right');
@@ -87,33 +92,35 @@
                 }
             };
         },
-        toBeDisplayNone: tools.defineBasicMatcher(function (actual) {
+        toBeDisplayNone: tools.defineBasicMatcher(function(actual) {
             var elem = actual;
             return jasmine.getEnv().equals_(elem.css('display'), ('none'));
         }),
-        toContainReference: tools.defineBasicMatcher(function (actual, val) {
-            return actual.any(function (item) {
+        toContainReference: tools.defineBasicMatcher(function(actual, val) {
+            return actual.any(function(item) {
                 return val === item;
             });
         }),
-        toContainAny: tools.defineBasicMatcher(function (actual, val) {
+        toContainAny: tools.defineBasicMatcher(function(actual, val) {
             return angular.isFunction(actual.any) && actual.any(val);
         }),
         toHaveOnlyTruthyProperty: tools.defineBasicMatcher(
-            function (actual, propertyName, includeFunctionReturnValues) {
-                return Object.keys(actual).every(function (key) {
+            function(actual, propertyName, includeFunctionReturnValues) {
+                return Object.keys(actual).every(function(key) {
                     var value = typeof actual[key] === 'function' && includeFunctionReturnValues ? actual[key]() : actual[key];
                     return key === propertyName ? !!value : !value;
                 });
             },
-            function (actual, propertyName, includeFunctionReturnValues, pass) {
+            function(actual, propertyName, includeFunctionReturnValues, pass) {
                 return 'Expected "' + propertyName + '"' + (pass ? ' not' : '') + ' to be only truthy value of the given object.';
             }
         )
 
     };
 
-    beforeEach(function () {
+    matchers.toBeVisibleRiq = matchers.toBeVisible;
+
+    beforeEach(function() {
         jasmine.addMatchers(matchers);
     });
 })
