@@ -72,6 +72,11 @@
         toContainOnly: tools.defineBasicMatcher(function(actual, array) {
             return actual.length === array.length && containAll(actual, array);
         }),
+        toHaveClass: tools.defineBasicMatcher(function(actual, className) {
+            return $(actual).hasClass(className);
+        }, function(actual, expected, pass) {
+            return 'Expected "' + $(actual).attr('class') + '"' + (pass ? ' not' : '') + ' to have class "' + expected + '"';
+        }),
         toBePositioned: function() {
             return {
                 compare: function(actual, t, l, b, r) {
@@ -96,11 +101,33 @@
             var elem = actual;
             return jasmine.getEnv().equals_(elem.css('display'), ('none'));
         }),
+
+        //determines visibillity based on display none for now irrespective of attachement to the document
+        toBeVisible: tools.defineBasicMatcher(function(actual) {
+            var element = actual;
+            if (!element || !angular.isFunction(element.parent)) {
+                return false;
+            }
+            var lastParent = element;
+            do {
+                if (lastParent.length === 0 || lastParent.css('display') === 'none' || lastParent.hasClass('ng-hide')) {
+                    return false;
+                }
+                lastParent = lastParent.parent();
+            } while (lastParent.length > 0);
+            return true;
+        }),
         toContainReference: tools.defineBasicMatcher(function(actual, val) {
             return actual.any(function(item) {
                 return val === item;
             });
         }),
+
+        toBeDisabled: tools.defineBasicMatcher(function(actual) {
+            var disabled = actual.attr('disabled');
+            return disabled === true || disabled === 'true' || disabled === 'disabled';
+        }),
+
         toContainAny: tools.defineBasicMatcher(function(actual, val) {
             return angular.isFunction(actual.any) && actual.any(val);
         }),
@@ -117,8 +144,6 @@
         )
 
     };
-
-    matchers.toBeVisibleRiq = matchers.toBeVisible;
 
     beforeEach(function() {
         jasmine.addMatchers(matchers);
