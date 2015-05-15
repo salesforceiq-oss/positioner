@@ -2,7 +2,7 @@
   "name": "bedrock",
   "version": "0.0.0",
   "description": "a template for basic js packages",
-  "main": "index.js",
+  "main": "src/index.js",
   "devDependencies": {
     "browserify-istanbul": "~0.1.5",
     "gulp": "~3.8.11",
