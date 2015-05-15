@@ -5,4 +5,4 @@ build
 tmp
 test-assets
 /coverage
-release/bundle*.css
+release
