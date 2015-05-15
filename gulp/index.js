@@ -28,7 +28,7 @@ require('gulp-tasks-riq/karma')({
 
     },
     testGlobs: [
-        global.PUBLIC_WEBAPP_PATH + 'src/**/*.spec.js'
+        'src/**/*.spec.js'
     ]
 });
 
