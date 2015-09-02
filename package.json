@@ -1,5 +1,5 @@
 {
-  "name": "bedrock",
+  "name": "perf-zone",
   "version": "0.0.0",
   "description": "a template for basic js packages",
   "main": "src/index.js",
@@ -7,12 +7,24 @@
     "browserify-istanbul": "~0.1.5",
     "gulp": "~3.8.11",
     "gulp-tasks-riq": "~0.2.0",
-    "karma": "~0.12.31",    
+    "karma": "~0.12.31",
     "yargs": "~3.9.0"
   },
   "scripts": {
     "test": "gulp karma"
   },
   "author": "rusty.camden@gmail.com",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/relateiq/perf-zone.git"
+  },
+  "keywords": [
+    "performance",
+    "javascript"
+  ],
+  "bugs": {
+    "url": "https://github.com/relateiq/perf-zone/issues"
+  },
+  "homepage": "https://github.com/relateiq/perf-zone"
 }
