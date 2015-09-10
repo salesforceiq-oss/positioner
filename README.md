@@ -2,6 +2,8 @@
 
 Easy way to make new pure js or web app repos
 
+prereq:  `brew install hub`
+
 1. `cd ~/projects`
 2. `mkdir project-name`
 3. `cd project-name`
