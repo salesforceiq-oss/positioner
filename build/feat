@@ -44,12 +44,14 @@ case $featname in
     'browserify')
         if [ "$featcmd" = "enable" ]; then
             npm install --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
-            cat karma.conf.json | jq '.frameworks += ["browserify"]' > $TMPDIR/karma.conf.json
-            mv $TMPDIR/karma.conf.json karma.conf.json
+            tmpfile=$(mktemp -t XXXXXXXX)
+            cat karma.conf.json | jq '.frameworks += ["browserify"]' > $tmpfile 
+            mv $tmpfile karma.conf.json
         else
             npm uninstall --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
-            cat karma.conf.json | jq '.frameworks -= ["browserify"]' > $TMPDIR/karma.conf.json
-            mv $TMPDIR/karma.conf.json karma.conf.json
+            tmpfile=$(mktemp -t XXXXXXXX)
+            cat karma.conf.json | jq '.frameworks -= ["browserify"]' > $tmpfile
+            mv $tmpfile karma.conf.json
         fi
         ;; 
 esac
@@ -59,6 +61,7 @@ if [ "$featcmd" = "enable" ]; then
     featflag="true"
 fi
 
-cat package.json | jq ".iqproj += { $featname: $featflag }" > $TMPDIR/package.json;
-mv $TMPDIR/package.json package.json
+tmpfile=$(mktemp -t XXXXXXXX)
+cat package.json | jq ".iqproj += { $featname: $featflag }" > $tmpfile;
+mv $tmpfile package.json
 
