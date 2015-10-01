@@ -1,0 +1,64 @@
+#!/bin/bash 
+
+####################################################################
+# Feature Management
+#
+# This script doesn't really contribute to the build itself,
+# but provides a simple interface to enable/disable certain build
+# features
+####################################################################
+
+featcmd=$1
+shift
+featname=$1
+shift
+
+if [ -z "$featname" ]; then
+    echo "No feature name specified"
+    echo "Usage: "
+    echo "    iqproj feat enable|disable featurename"
+    exit 1;
+fi
+
+case $featname in
+    'app') 
+        if [ "$featcmd" = "enable" ]; then
+            ./iqb feat enable browserify
+            npm install --save-dev express tiny-lr connect-livereload
+            mkdir -p app
+            touch app/index.js
+            touch app/index.html
+        else
+            npm uninstall --save-dev express tiny-lr connect-livereload
+        fi
+        ;;
+
+    'scss')
+        if [ "$featcmd" = "enable" ]; then
+            npm install --save-dev node-sass
+        else
+            npm uninstall --save-dev node-sass
+        fi
+        ;;
+
+    'browserify')
+        if [ "$featcmd" = "enable" ]; then
+            npm install --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
+            cat karma.conf.json | jq '.frameworks += ["browserify"]' > $TMPDIR/karma.conf.json
+            mv $TMPDIR/karma.conf.json karma.conf.json
+        else
+            npm uninstall --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
+            cat karma.conf.json | jq '.frameworks -= ["browserify"]' > $TMPDIR/karma.conf.json
+            mv $TMPDIR/karma.conf.json karma.conf.json
+        fi
+        ;; 
+esac
+
+featflag="false"
+if [ "$featcmd" = "enable" ]; then
+    featflag="true"
+fi
+
+cat package.json | jq ".iqproj += { $featname: $featflag }" > $TMPDIR/package.json;
+mv $TMPDIR/package.json package.json
+

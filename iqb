@@ -1,0 +1,94 @@
+#!/bin/bash -e
+
+# export these things because parallel
+export KARMA_CMD=node_modules/karma/bin/karma
+export BROWSERIFY_CMD=node_modules/browserify/bin/cmd.js
+export EXORCIST_CMD=node_modules/exorcist/bin/exorcist.js
+export WATCHIFY_CMD=node_modules/watchify/bin/cmd.js
+export WATCH_CMD=node_modules/chokidar-cli/index.js
+export SASS_CMD=node_modules/node-sass/bin/node-sass
+PARALLEL_CMD='parallel --line-buffer --halt 2'
+
+# read some names out of the package.json 
+export ENTRY_POINT=$(cat package.json | jq -r .main);
+export DEFAULT_NAME=$(cat package.json | jq -r .name);
+
+# configuration settings
+export FEAT_BROWSERIFY=$(cat package.json | jq -r .iqproj.browserify)
+export FEAT_SCSS=$(cat package.json | jq -r .iqproj.scss)
+export FEAT_APP=$(cat package.json | jq -r .iqproj.app)
+
+self=$0
+command=$1
+shift
+
+echo "# RUN $command $*"
+
+# super basic override functionality.  allow shipping with a base task,
+# but allow that task to be overridden by creating a file in build/commandname
+# BONUS: also lets you add new commands (written in any language!)
+if [ -f "build/$command" ]; then
+    echo "** Override: $command (build/$command)"
+    build/$command $*
+    return $?
+fi
+
+# basic build commands for getting up and running quickly:
+#   * unit test running with karma
+#   * local server 
+#   * clean/prep tasks
+#   * individual build/watch steps for templates, assets, scss, and js (browserify)
+case $command in
+    # npm lifecycle commands
+    "test")             $KARMA_CMD start --single-run --no-auto-watch karma.conf.js ;;
+
+    # basic housekeeping tasks
+    "prep")       mkdir -p release ;;
+    "clean")      rm -rf release/* ;;
+    "assets")     [ -d assets ] && cp -R assets release ;;
+
+    # testingTCH
+    "watch:test") $KARMA_CMD start karma.conf.js ;;
+
+    # browserify/bundling
+    "watch:js")   $WATCHIFY_CMD $ENTRY_POINT -d -o "$EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js" ;;
+    "build:js")   $BROWSERIFY_CMD $ENTRY_POINT -d | $EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js ;;
+
+    # scss
+    "watch:scss") $WATCH_CMD --silent src/styles -c "$self build:scss"  ;;
+    "build:scss") $SASS_CMD src/styles/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css ;;
+
+    # app / local dev
+    "watch:html") $WATCH_CMD --silent app/* -c "$self build:html" ;;
+    "build:html") cp app/index.html release/ ;;
+    "watch:app")  $WATCHIFY_CMD app/index.js -d -o release/app.js ;;
+    "build:app")  $BROWSERIFY_CMD app/index.js -d -o release/app.js ;;
+    "livereload") $WATCH_CMD --silent release/* -c 'curl -s http://localhost:35729/changed\?files\=index.html' ;;
+
+    # entry points
+    "start"|"watch")
+        features=("$self watch:test")
+        [ "$FEAT_SCSS" = "true" ] && features+=("$self watch:scss");
+        [ "$FEAT_BROWSERIFY" = "true" ] && features+=("$self watch:js");
+        [ "$FEAT_APP" = "true" ]  && features+=("$self watch:app" "$self watch:html" "$self serve" "$self livereload");
+        $PARALLEL_CMD ::: "${features[@]}"
+        ;;
+
+    "build")
+        features=("$self test" "$self assets")
+        [ "$FEAT_SCSS" = "true" ] && features+=("$self build:scss");
+        [ "$FEAT_BROWSERIFY" = "true" ] && features+=("$self build:js");
+        [ "$FEAT_APP" = "true" ]  && features+=("$self build:app" "$self build:html");
+
+        $self clean &&
+        $self prep &&
+        $PARALLEL_CMD ::: "${features[@]}"
+        ;;
+
+    *)
+        echo "Unknown command: $command"
+        exit 1
+esac
+
+echo "---DONE: $command $*"
+
