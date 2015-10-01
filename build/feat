@@ -13,47 +13,56 @@ shift
 featname=$1
 shift
 
-if [ -z "$featname" ]; then
-    echo "No feature name specified"
+function print-usage() {
+    echo ${1:-"No feature name specified"}
     echo "Usage: "
     echo "    iqproj feat enable|disable featurename"
     exit 1;
+}
+
+if [ -z "$featname" ]; then
+    print-usage;
 fi
 
 case $featname in
-    'app') 
-        if [ "$featcmd" = "enable" ]; then
+    'app') case $featcmd in
+        'enable')
             ./iqb feat enable browserify
             npm install --save-dev express tiny-lr connect-livereload
             mkdir -p app
             touch app/index.js
             touch app/index.html
-        else
+            ;;
+        'disable')
             npm uninstall --save-dev express tiny-lr connect-livereload
-        fi
-        ;;
+            ;;
+        *) print-usage "feat: unknown command $featcmd" ;;
+    esac
+    ;;
 
-    'scss')
-        if [ "$featcmd" = "enable" ]; then
-            npm install --save-dev node-sass
-        else
-            npm uninstall --save-dev node-sass
-        fi
-        ;;
+    'scss') case $featcmd in 
+        'enable') npm install --save-dev node-sass ;;
+        'disable') npm uninstall --save-dev node-sass ;;
+        *) print-usage "feat: unknown command $featcmd" ;;
+    esac
+    ;;
 
-    'browserify')
-        if [ "$featcmd" = "enable" ]; then
+    'browserify') case $featcmd in 
+        'enable')
             npm install --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
             tmpfile=$(mktemp -t XXXXXXXX)
             cat karma.conf.json | jq '.frameworks += ["browserify"]' > $tmpfile 
             mv $tmpfile karma.conf.json
-        else
+            ;;
+        'disable')
             npm uninstall --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
             tmpfile=$(mktemp -t XXXXXXXX)
             cat karma.conf.json | jq '.frameworks -= ["browserify"]' > $tmpfile
             mv $tmpfile karma.conf.json
-        fi
-        ;; 
+            ;;
+        *) print-usage "feat: unknown command $featcmd" ;;
+    esac
+    ;; 
 esac
 
 featflag="false"
