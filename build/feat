@@ -25,43 +25,50 @@ if [ -z "$featname" ]; then
 fi
 
 case $featname in
-    'app') case $featcmd in
-        'enable')
-            ./iqb feat enable browserify
-            npm install --save-dev express tiny-lr connect-livereload
-            mkdir -p app
-            touch app/index.js
-            touch app/index.html
-            ;;
-        'disable')
-            npm uninstall --save-dev express tiny-lr connect-livereload
-            ;;
-        *) print-usage "feat: unknown command $featcmd" ;;
-    esac
+    'app')
+        case $featcmd in
+            'enable')
+                ./iqb feat enable browserify
+                npm install --save-dev express tiny-lr connect-livereload
+                mkdir -p app
+                touch app/index.js
+                touch app/index.html
+                ;;
+            'disable')
+                npm uninstall --save-dev express tiny-lr connect-livereload
+                ;;
+            *)
+                print-usage "feat: unknown command $featcmd"
+                ;;
+        esac
     ;;
 
-    'scss') case $featcmd in 
-        'enable') npm install --save-dev node-sass ;;
-        'disable') npm uninstall --save-dev node-sass ;;
-        *) print-usage "feat: unknown command $featcmd" ;;
-    esac
+    'scss')
+        case $featcmd in 
+            'enable')  npm install --save-dev node-sass ;;
+            'disable') npm uninstall --save-dev node-sass ;;
+            *)         print-usage "feat: unknown command $featcmd" ;;
+        esac
     ;;
 
-    'browserify') case $featcmd in 
-        'enable')
-            npm install --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
-            tmpfile=$(mktemp -t XXXXXXXX)
-            cat karma.conf.json | jq '.frameworks += ["browserify"]' > $tmpfile 
-            mv $tmpfile karma.conf.json
-            ;;
-        'disable')
-            npm uninstall --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
-            tmpfile=$(mktemp -t XXXXXXXX)
-            cat karma.conf.json | jq '.frameworks -= ["browserify"]' > $tmpfile
-            mv $tmpfile karma.conf.json
-            ;;
-        *) print-usage "feat: unknown command $featcmd" ;;
-    esac
+    'browserify')
+        case $featcmd in 
+            'enable')
+                npm install --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
+                tmpfile=$(mktemp -t XXXXXXXX)
+                cat karma.conf.json | jq '.frameworks += ["browserify"]' > $tmpfile 
+                mv $tmpfile karma.conf.json
+                ;;
+            'disable')
+                npm uninstall --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
+                tmpfile=$(mktemp -t XXXXXXXX)
+                cat karma.conf.json | jq '.frameworks -= ["browserify"]' > $tmpfile
+                mv $tmpfile karma.conf.json
+                ;;
+            *)
+                print-usage "feat: unknown command $featcmd"
+                ;;
+        esac
     ;; 
 esac
 
