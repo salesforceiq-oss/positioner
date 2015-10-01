@@ -5,13 +5,13 @@
   "main": "src/index.js",
   "author": "webdevs@salesforceiq.com",
   "license": "MIT",
-  "homepage": "https://github.com/relateiq/perf-zone",
+  "homepage": "https://github.com/relateiq/bedrock",
   "repository": {
     "type": "git",
-    "url": "https://github.com/relateiq/perf-zone.git"
+    "url": "https://github.com/relateiq/bedrock.git"
   },
   "bugs": {
-    "url": "https://github.com/relateiq/perf-zone/issues"
+    "url": "https://github.com/relateiq/bedrock/issues"
   },
   "iqproj": {
     "app": false,
