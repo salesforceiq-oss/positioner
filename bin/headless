@@ -14,10 +14,6 @@ if [ $? -gt 0 ]; then
     exit 1;
 fi
 
-# remove any existing headless containers in case they're sticking around
-docker kill browser &> /dev/null
-docker rm browser &> /dev/null
-
 # find out some important numbers
 host_machine_ip=192.168.99.1
 docker_machine_ip=$(docker-machine ssh $DOCKER_MACHINE_NAME "ip -o -4 addr list docker0" | awk '{print $4}' | cut -d/ -f1)
@@ -31,6 +27,7 @@ karma_url=$(echo $1 | sed "s,127.0.0.1,$docker_machine_ip,g" | sed "s,localhost,
 
 echo "Starting headless browser..."
 exec docker run \
+    --rm \
     -e KARMA_URL="$karma_url" \
     --name browser \
     docker.amz.relateiq.com/relateiq/headlessbrowser:latest
