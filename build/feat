@@ -33,7 +33,7 @@ case $featname in
                 mkdir -p app
                 touch app/index.js
                 if [ ! -f app/index.html ]; then
-                    echo "<html><body>it works!</body></html>" > app/index.html
+                    echo "<html><body>it works</body></html>" > app/index.html
                 fi
 
                 npm install --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
