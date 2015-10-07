@@ -28,38 +28,21 @@ case $featname in
     'app')
         case $featcmd in
             'enable')
-                ./iqb feat enable browserify
-                npm install --save-dev express tiny-lr connect-livereload
+                ./iqb feat browserify enable
+                npm install --save-dev express tiny-lr connect-livereload node-sass
                 mkdir -p app
                 touch app/index.js
-                touch app/index.html
-                ;;
-            'disable')
-                npm uninstall --save-dev express tiny-lr connect-livereload
-                ;;
-            *)
-                print-usage "feat: unknown command $featcmd"
-                ;;
-        esac
-    ;;
+                if [ ! -f app/index.html ]; then
+                    echo "<html><body>it works!</body></html>" > app/index.html
+                fi
 
-    'scss')
-        case $featcmd in 
-            'enable')  npm install --save-dev node-sass ;;
-            'disable') npm uninstall --save-dev node-sass ;;
-            *)         print-usage "feat: unknown command $featcmd" ;;
-        esac
-    ;;
-
-    'browserify')
-        case $featcmd in 
-            'enable')
                 npm install --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
                 tmpfile=$(mktemp -t XXXXXXXX)
                 cat karma.conf.json | jq '.frameworks += ["browserify"]' > $tmpfile 
                 mv $tmpfile karma.conf.json
                 ;;
             'disable')
+                npm uninstall --save-dev express tiny-lr connect-livereload node-sass
                 npm uninstall --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
                 tmpfile=$(mktemp -t XXXXXXXX)
                 cat karma.conf.json | jq '.frameworks -= ["browserify"]' > $tmpfile
@@ -69,7 +52,12 @@ case $featname in
                 print-usage "feat: unknown command $featcmd"
                 ;;
         esac
-    ;; 
+    ;;
+
+    *)
+        echo "Unknown feature $featname";
+        exit 1;
+    ;;
 esac
 
 featflag="false"
