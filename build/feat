@@ -54,6 +54,29 @@ case $featname in
         esac
     ;;
 
+    'headless')
+        case $featcmd in
+            'enable')
+                npm install --save-dev karma-script-launcher
+                npm uninstall --save-dev phantomjs karma-phantomjs-launcher
+                tmpfile=$(mktemp -t XXXXXXXX)
+                cat karma.conf.json | jq '.browsers = ["bin/headless"]' > $tmpfile 
+                mv $tmpfile karma.conf.json
+                ;;
+            'disable')
+                npm uninstall --save-dev karma-script-launcher
+                npm install --save-dev phantomjs karma-phantomjs-launcher
+                tmpfile=$(mktemp -t XXXXXXXX)
+                cat karma.conf.json | jq '.browsers = ["PhantomJS"]' > $tmpfile 
+                mv $tmpfile karma.conf.json
+                ;;
+            *)
+                print-usage "feat: unknown command $featcmd"
+                ;;
+        esac
+    ;;
+
+
     *)
         echo "Unknown feature $featname";
         exit 1;
