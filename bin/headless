@@ -30,6 +30,6 @@ exec docker run \
     --rm \
     -e KARMA_URL="$karma_url" \
     --name browser \
-    docker.amz.relateiq.com/relateiq/headlessbrowser:latest
+    relateiq/headlessbrowser:latest
 
 
