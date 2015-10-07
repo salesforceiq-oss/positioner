@@ -77,15 +77,12 @@ iqb feat enable|disable featurename
 
 ## Features
 
-### `app`: index.html, local server, livereload
+### `app`: index.html, local server, sass, browserify, livereload
 This feature should be enabled when the module contains a mini-application that's used
 for feature testing, examples, or whatever.  The `browserify` feature is automatically 
 enabled as part of this feature.
 
-### `scss`: pretty self-explanitory
 Uses src/styles/packagename.scss as an entry point.
 
-### `browserify`: browserifies the whole module + app/index.js
-This isn't necessary if the library is just getting `require`d by the consuming library.  It'll
-run browserify on `src/index.js` and put the output in `release/packagename.js`.
+### `headless`: run karma tests in a headless firefox instance
 
