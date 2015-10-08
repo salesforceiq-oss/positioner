@@ -28,18 +28,17 @@ case $featname in
     'app')
         case $featcmd in
             'enable')
-                ./iqb feat browserify enable
+                npm install --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
+                tmpfile=$(mktemp -t XXXXXXXX)
+                cat karma.conf.json | jq '.frameworks += ["browserify"]' > $tmpfile 
+                mv $tmpfile karma.conf.json
+
                 npm install --save-dev express tiny-lr connect-livereload node-sass
                 mkdir -p app
                 touch app/index.js
                 if [ ! -f app/index.html ]; then
                     echo "<html><body>it works</body></html>" > app/index.html
                 fi
-
-                npm install --save-dev browserify browserify-istanbul karma-browserify watchify exorcist
-                tmpfile=$(mktemp -t XXXXXXXX)
-                cat karma.conf.json | jq '.frameworks += ["browserify"]' > $tmpfile 
-                mv $tmpfile karma.conf.json
                 ;;
             'disable')
                 npm uninstall --save-dev express tiny-lr connect-livereload node-sass
