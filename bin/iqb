@@ -44,25 +44,25 @@ case $command in
     # basic housekeeping tasks
     "prep")       mkdir -p release ;;
     "clean")      rm -rf release/* ;;
-    "assets")     [ -d assets ] && cp -R assets release ;;
+    "assets")     [ -d assets ] && $self prep && cp -R assets release ;;
 
     # testing
     "watch:test") $KARMA_CMD start karma.conf.js ;;
 
     # browserify feature
-    "watch:js")   $WATCHIFY_CMD $ENTRY_POINT -d -o "$EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js" ;;
-    "build:js")   $BROWSERIFY_CMD $ENTRY_POINT -d | $EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js ;;
+    "watch:js")   $self prep && $WATCHIFY_CMD $ENTRY_POINT -d -o "$EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js" ;;
+    "build:js")   $self prep && $BROWSERIFY_CMD $ENTRY_POINT -d | $EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js ;;
 
     # scss feature
-    "watch:scss") $WATCH_CMD --silent 'src/**/*.scss' -c "$self build:scss"  ;;
-    "build:scss") [ -f src/${DEFAULT_NAME}.scss ] && $SASS_CMD src/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css ;;
+    "watch:scss") $self prep && $WATCH_CMD --silent 'src/**/*.scss' -c "$self build:scss"  ;;
+    "build:scss") [ -f src/${DEFAULT_NAME}.scss ] && $self prep && $SASS_CMD src/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css ;;
 
     # app feature
     "watch:html") $self build:html && $WATCH_CMD --silent app/* -c "$self build:html" ;;
-    "build:html") cp app/index.html release/ ;;
-    "watch:app")  $WATCHIFY_CMD app/index.js -d -o "$EXORCIST_CMD release/app.js.map > release/app.js" ;;
-    "build:app")  $BROWSERIFY_CMD app/index.js -d | $EXORCIST_CMD release/app.js.map > release/app.js ;;
-    "livereload") $WATCH_CMD --silent release/* -c 'curl -s http://localhost:35729/changed\?files\=index.html' ;;
+    "build:html") $self prep && cp app/index.html release/ ;;
+    "watch:app")  $self prep && $WATCHIFY_CMD app/index.js -d -o "$EXORCIST_CMD release/app.js.map > release/app.js" ;;
+    "build:app")  $self prep && $BROWSERIFY_CMD app/index.js -d | $EXORCIST_CMD release/app.js.map > release/app.js ;;
+    "livereload") $self prep && $WATCH_CMD --silent release/* -c 'curl -s http://localhost:35729/changed\?files\=index.html' ;;
 
     # entry points
     "start"|"watch")
