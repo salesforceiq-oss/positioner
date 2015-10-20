@@ -27,7 +27,6 @@
   "devDependencies": {
     "chokidar-cli": "~1.0.1",
     "tape": "~4.2.1",
-    "watchify": "~3.4.0",
     "yargs": "~3.26.0"
   }
 }
