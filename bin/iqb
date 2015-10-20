@@ -39,7 +39,7 @@ fi
 #   * individual build/watch steps for templates, assets, scss, and js (browserify)
 case $command in
     # npm lifecycle commands
-    "test")       $TAPE_CMD ./**/*.spec.js;;
+    "test")       $TAPE_CMD ${1:-./**/*.spec.js};;
 
     # basic housekeeping tasks
     "prep")       mkdir -p release ;;
@@ -47,7 +47,7 @@ case $command in
     "assets")     [ -d assets ] && $self prep && cp -R assets release ;;
 
     # testing
-    "watch:test") $WATCH_CMD --silent ./**/*.spec.js -c "$self test";;
+    "watch:test") $WATCH_CMD --silent ${1-./**/*.spec.js} -c "$self test";;
 
     # browserify feature
     "watch:js")   $self prep && $WATCHIFY_CMD $ENTRY_POINT -d -o "$EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js" ;;
