@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # export these things because parallel
-export KARMA_CMD=node_modules/karma/bin/karma
+export TAPE_CMD=node_modules/tape/bin/tape
 export BROWSERIFY_CMD=node_modules/browserify/bin/cmd.js
 export EXORCIST_CMD=node_modules/exorcist/bin/exorcist.js
 export WATCHIFY_CMD=node_modules/watchify/bin/cmd.js
@@ -33,13 +33,13 @@ if [ -f "build/$command" ]; then
 fi
 
 # basic build commands for getting up and running quickly:
-#   * unit test running with karma
+#   * unit test running with tape
 #   * local server
 #   * clean/prep tasks
 #   * individual build/watch steps for templates, assets, scss, and js (browserify)
 case $command in
     # npm lifecycle commands
-    "test")       $KARMA_CMD start --single-run --no-auto-watch karma.conf.js ;;
+    "test")       $TAPE_CMD ./**/*.spec.js;;
 
     # basic housekeeping tasks
     "prep")       mkdir -p release ;;
@@ -47,7 +47,7 @@ case $command in
     "assets")     [ -d assets ] && $self prep && cp -R assets release ;;
 
     # testing
-    "watch:test") $KARMA_CMD start karma.conf.js ;;
+    "watch:test") $WATCH_CMD --silent ./**/*.spec.js -c "$self test";;
 
     # browserify feature
     "watch:js")   $self prep && $WATCHIFY_CMD $ENTRY_POINT -d -o "$EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js" ;;

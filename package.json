@@ -26,11 +26,7 @@
   "dependencies": {},
   "devDependencies": {
     "chokidar-cli": "~1.0.1",
-    "jasmine-core": "~2.3.4",
-    "karma": "~0.13.10",
-    "karma-jasmine": "~0.3.6",
-    "karma-phantomjs-launcher": "~0.2.1",
-    "phantomjs": "~1.9.18",
+    "tape": "~4.2.1",
     "watchify": "~3.4.0",
     "yargs": "~3.26.0"
   }
