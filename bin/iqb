@@ -2,6 +2,7 @@
 
 # export these things because parallel
 export TAPE_CMD=node_modules/tape/bin/tape
+export KARMA_CMD=node_modules/karma/bin/karma
 export BROWSERIFY_CMD=node_modules/browserify/bin/cmd.js
 export EXORCIST_CMD=node_modules/exorcist/bin/exorcist.js
 export WATCHIFY_CMD=node_modules/watchify/bin/cmd.js
@@ -39,7 +40,8 @@ fi
 #   * individual build/watch steps for templates, assets, scss, and js (browserify)
 case $command in
     # npm lifecycle commands
-    "test")       $TAPE_CMD ${1:-src/**/*.spec.js};;
+    "test")       $TAPE_CMD ${1:-src/**/*.spec.js} ;;
+    "karma")      $KARMA_CMD start --single-run --no-auto-watch karma.conf.js ;;
 
     # basic housekeeping tasks
     "prep")       mkdir -p release ;;
@@ -47,7 +49,8 @@ case $command in
     "assets")     [ -d assets ] && $self prep && cp -R assets release ;;
 
     # testing
-    "watch:test") $WATCH_CMD --silent ${1-src/**/*.spec.js} -c "$self test";;
+    "watch:test") $self test && $WATCH_CMD --silent ${1-src/**/*.spec.js} -c "$self test" ;;
+    "watch:karma")$KARMA_CMD start karma.conf.js ;;
 
     # browserify feature
     "watch:js")   $self prep && $WATCHIFY_CMD $ENTRY_POINT -d -o "$EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js" ;;
@@ -69,7 +72,8 @@ case $command in
         features=("$self watch:test")
 
         if [ "$FEAT_APP" = "true" ]; then
-            features+=(\
+            features=(\
+                "$self watch:karma" \
                 "$self watch:app" \
                 "$self watch:html" \
                 "$self watch:scss" \
@@ -83,15 +87,18 @@ case $command in
         ;;
 
     "build")
-        features=("$self test" "$self assets")
+        features=("$self assets")
 
         if [ "$FEAT_APP" = "true" ]; then
             features+=( \
+                "$self karma" \
                 "$self build:scss" \
                 "$self build:js" \
                 "$self build:app" \
                 "$self build:html" \
             );
+        else
+            features+=("$self test")
         fi
 
         $self clean &&

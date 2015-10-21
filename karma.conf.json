@@ -6,6 +6,9 @@
   "files": [
     "src/**/*.spec.js"
   ],
+  "preprocessors": {
+    "src/**/*.spec.js": "browserify"
+  },
   "autoWatch": true,
   "reporters": [
     "progress"
