@@ -19,9 +19,9 @@
     "browserify": false
   },
   "scripts": {
-    "test": "./iqb test",
-    "start": "./iqb start",
-    "preversion": "./iqb test"
+    "test": "bin/iqb test",
+    "start": "bin/iqb start",
+    "preversion": "bin/iqb test"
   },
   "dependencies": {},
   "devDependencies": {
