@@ -7,7 +7,7 @@
     "src/**/*.spec.js"
   ],
   "browserify": {
-      "debug": true
+    "debug": true
   },
   "preprocessors": {
     "src/**/*.spec.js": "browserify"
