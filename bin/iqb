@@ -40,8 +40,13 @@ fi
 #   * individual build/watch steps for templates, assets, scss, and js (browserify)
 case $command in
     # npm lifecycle commands
-    "test")       $TAPE_CMD ${1:-src/**/*.spec.js} ;;
-    "karma")      $KARMA_CMD start --single-run --no-auto-watch karma.conf.js ;;
+    "test")
+        if [ "$FEAT_APP" = "true" ]; then
+            $KARMA_CMD start --single-run --no-auto-watch karma.conf.js 
+        else
+            $TAPE_CMD ${1:-src/**/*.spec.js}
+        fi
+        ;;
 
     # basic housekeeping tasks
     "prep")       mkdir -p release ;;
@@ -49,8 +54,13 @@ case $command in
     "assets")     [ -d assets ] && $self prep && cp -R assets release ;;
 
     # testing
-    "watch:test") $self test && $WATCH_CMD --silent ${1-src/**/*.spec.js} -c "$self test" ;;
-    "watch:karma")$KARMA_CMD start karma.conf.js ;;
+    "watch:test") 
+        if [ "$FEAT_APP" = "true" ]; then
+            $KARMA_CMD start karma.conf.js 
+        else
+            $self test && $WATCH_CMD --silent ${1-src/**/*.spec.js} -c "$self test" 
+        fi
+        ;;
 
     # browserify feature
     "watch:js")   $self prep && $WATCHIFY_CMD $ENTRY_POINT -d -o "$EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js" ;;
@@ -72,8 +82,7 @@ case $command in
         features=("$self watch:test")
 
         if [ "$FEAT_APP" = "true" ]; then
-            features=(\
-                "$self watch:karma" \
+            features+=(\
                 "$self watch:app" \
                 "$self watch:html" \
                 "$self watch:scss" \
@@ -87,18 +96,15 @@ case $command in
         ;;
 
     "build")
-        features=("$self assets")
+        features=("$self assets" "$self test")
 
         if [ "$FEAT_APP" = "true" ]; then
             features+=( \
-                "$self karma" \
                 "$self build:scss" \
                 "$self build:js" \
                 "$self build:app" \
                 "$self build:html" \
             );
-        else
-            features+=("$self test")
         fi
 
         $self clean &&
