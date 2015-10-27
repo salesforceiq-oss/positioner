@@ -6,6 +6,9 @@
   "files": [
     "src/**/*.spec.js"
   ],
+  "browserify": {
+      "debug": true
+  },
   "preprocessors": {
     "src/**/*.spec.js": "browserify"
   },

@@ -30,6 +30,8 @@ case $featname in
             browserify
             browserify-istanbul
             karma
+            jasmine
+            karma-jasmine
             karma-browserify
             karma-chrome-launcher
             karma-phantomjs-launcher
