@@ -14,9 +14,7 @@
     "url": "https://github.com/relateiq/bedrock/issues"
   },
   "iqproj": {
-    "app": false,
-    "scss": false,
-    "browserify": false
+    "app": false
   },
   "scripts": {
     "test": "bin/iqb test",

@@ -46,34 +46,46 @@ case $featname in
 
         case $featcmd in
             'enable')
+                # install dependencies
                 npm install --save-dev "${npm_packages[@]}"
                 npm uninstall --save-dev tape
-                tmpfile=$(mktemp -t XXXXXXXX)
-                cat karma.conf.json | jq '.frameworks += ["browserify"]' > $tmpfile
-                mv $tmpfile karma.conf.json
 
-                npm install --save-dev
+                # create some app scaffolding... not super useful but meh
                 mkdir -p app
                 touch app/index.js
                 if [ ! -f app/index.html ]; then
                     echo "<html><body>it works</body></html>" > app/index.html
                 fi
 
+                # update the npm scripts
+                tmpfile=$(mktemp -t XXXXXXXX)
+                cat package.json | jq '.scripts.test = "bin/iqb karma"' | jq '.scripts.preversion = "bin/iqb karma"' > $tmpfile
+                mv $tmpfile package.json 
+
                 echo
-                echo "!!! Warning: testing framework switched to karma; tape tests won't work in karma."
+                echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                echo "!!! WARNING: testing framework switched to karma; tape tests won't work in karma."
+                echo "!!! You will need to update all *.spec.js files accordingly.                     "
+                echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
                 ;;
             'disable')
                 npm install --save-dev tape
                 npm uninstall --save-dev "${npm_packages[@]}"
+
+                # update the npm scripts
                 tmpfile=$(mktemp -t XXXXXXXX)
-                cat karma.conf.json | jq '.frameworks -= ["browserify"]' > $tmpfile
-                mv $tmpfile karma.conf.json
+                cat package.json | jq '.scripts.test = "bin/iqb test"' | jq '.scripts.preversion = "bin/iqb test"' > $tmpfile
+                mv $tmpfile package.json 
 
                 echo
-                echo "!!! Warning: testing framework switched to tape; karma tests won't work in tape."
+                echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                echo "!!! WARNING: testing framework switched to tape; karma tests won't work in tape."
+                echo "!!! You will need to update all *.spec.js files accordingly.                     "
+                echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
                 ;;
             *)
                 print-usage "feat: unknown command $featcmd"
+                exit 1;
                 ;;
         esac
     ;;
@@ -96,6 +108,7 @@ case $featname in
                 ;;
             *)
                 print-usage "feat: unknown command $featcmd"
+                exit 1;
                 ;;
         esac
     ;;
