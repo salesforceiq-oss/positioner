@@ -1,6 +1,8 @@
 #!/bin/bash -e
 
-# export these things because parallel
+
+#################################################################################
+# configuration (export because `parallel`)
 export TAPE_CMD=node_modules/tape/bin/tape
 export KARMA_CMD=node_modules/karma/bin/karma
 export BROWSERIFY_CMD=node_modules/browserify/bin/cmd.js
@@ -15,29 +17,27 @@ export ENTRY_POINT=$(cat package.json | jq -r .main);
 export DEFAULT_NAME=$(cat package.json | jq -r .name);
 
 # configuration settings
-export FEAT_BROWSERIFY=$(cat package.json | jq -r .iqproj.browserify)
-export FEAT_SCSS=$(cat package.json | jq -r .iqproj.scss)
 export FEAT_APP=$(cat package.json | jq -r .iqproj.app)
 
 self=$0
 command=$1
 shift
 
-echo "# RUN $command $*"
+#################################################################################
+# informational messages
+echo "# RUN $command $@"
 
 # super basic override functionality.  allow shipping with a base task,
 # but allow that task to be overridden by creating a file in build/commandname
 # BONUS: also lets you add new commands (written in any language!)
 if [ -f "build/$command" ]; then
     echo "** Override: $command (build/$command)"
-    exec build/$command $*
+    exec build/$command $@
 fi
 
-# basic build commands for getting up and running quickly:
-#   * unit test running with tape
-#   * local server
-#   * clean/prep tasks
-#   * individual build/watch steps for templates, assets, scss, and js (browserify)
+#################################################################################
+# Built-in [standard] commands
+# Any of these can be overridden by creating a `build/<taskname>` file
 case $command in
     # npm lifecycle commands
     "test")
@@ -67,7 +67,7 @@ case $command in
     "build:js")   $self prep && $BROWSERIFY_CMD $ENTRY_POINT -d | $EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js ;;
 
     # scss feature
-    "watch:scss") $self prep && $self build:scss && $WATCH_CMD --silent 'src/**/*.scss' -c "$self build:scss"  ;;
+    "watch:scss") $self prep && $self build:scss&& $WATCH_CMD --silent 'src/**/*.scss' -c "$self build:scss" ;;
     "build:scss") [ -f src/${DEFAULT_NAME}.scss ] && $self prep && $SASS_CMD src/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css ;;
 
     # app feature
