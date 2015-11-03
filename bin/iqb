@@ -23,6 +23,19 @@ command=$1
 shift
 
 #################################################################################
+# utilities
+function find-next-open-port() {
+    for port in $(seq $1 $(($1 + 1000))); do
+        echo "\035" | /usr/bin/nc 127.0.0.1 $port > /dev/null
+        if [ $? -gt 0 ]; then 
+            echo $port
+            return 0
+        fi
+    done
+    return 1
+}
+
+#################################################################################
 # informational messages
 echo "# RUN $command $@"
 
@@ -35,7 +48,7 @@ mkdir -p release/
 # BONUS: also lets you add new commands (written in any language!)
 if [ -f "build/$command" ]; then
     echo "** Override: $command (build/$command)"
-    exec build/$command $@
+    exec build/$command "$@"
 fi
 
 #################################################################################
@@ -77,7 +90,12 @@ case $command in
     "build:html") cp app/index.html release/ ;;
     "watch:app")  $self build:app && $WATCHIFY_CMD app/index.js -d -o "$EXORCIST_CMD release/app.js.map > release/app.js" ;;
     "build:app")  $BROWSERIFY_CMD app/index.js -d | $EXORCIST_CMD release/app.js.map > release/app.js ;;
-    "livereload") $WATCH_CMD --silent release/* -c 'curl -s http://localhost:35729/changed\?files\=index.html' ;;
+    "livereload") $WATCH_CMD --silent release/* -c "curl -s http://localhost:${1:-35729}/changed\?files\=index.html" ;;
+    "serve")
+        SRV_PORT=$(find-next-open-port 8080)
+        LR_PORT=$(find-next-open-port 35729)
+        $PARALLEL_CMD ::: "$self start-server $SRV_PORT $LR_PORT" "$self livereload $LR_PORT"
+        ;;
 
     # entry points
     "start"|"watch")
@@ -89,8 +107,7 @@ case $command in
                 "$self watch:html" \
                 "$self watch:scss" \
                 "$self watch:js" \
-                "$self serve" \
-                "$self livereload" \
+                "$self serve"
             );
         fi
 
