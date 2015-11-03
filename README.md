@@ -2,6 +2,9 @@
 
 Foundation for web libraries, modules, and applications.
 
+Check out [the wiki](https://github.com/relateiq/bedrock/wiki) for more information on
+how to use `iqb` after cloning.
+
 # bootstrapping
 
 ## iqproj method
