@@ -1,6 +1,5 @@
 #!/bin/bash -e
 
-
 #################################################################################
 # configuration (export because `parallel`)
 export TAPE_CMD=node_modules/tape/bin/tape
@@ -27,6 +26,10 @@ shift
 # informational messages
 echo "# RUN $command $@"
 
+# essential prep
+# iqb outputs all build artifacts to the release/ folder
+mkdir -p release/
+
 # super basic override functionality.  allow shipping with a base task,
 # but allow that task to be overridden by creating a file in build/commandname
 # BONUS: also lets you add new commands (written in any language!)
@@ -49,9 +52,8 @@ case $command in
         ;;
 
     # basic housekeeping tasks
-    "prep")       mkdir -p release ;;
     "clean")      rm -rf release/* ;;
-    "assets")     [ -d assets ] && $self prep && cp -R assets release ;;
+    "assets")     [ -d assets ] && cp -R assets release ;;
 
     # testing
     "watch:test") 
@@ -63,19 +65,19 @@ case $command in
         ;;
 
     # browserify feature
-    "watch:js")   $self prep && $WATCHIFY_CMD $ENTRY_POINT -d -o "$EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js" ;;
-    "build:js")   $self prep && $BROWSERIFY_CMD $ENTRY_POINT -d | $EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js ;;
+    "watch:js")   $WATCHIFY_CMD $ENTRY_POINT -d -o "$EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js" ;;
+    "build:js")   $BROWSERIFY_CMD $ENTRY_POINT -d | $EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js ;;
 
     # scss feature
-    "watch:scss") $self prep && $self build:scss&& $WATCH_CMD --silent 'src/**/*.scss' -c "$self build:scss" ;;
-    "build:scss") [ -f src/${DEFAULT_NAME}.scss ] && $self prep && $SASS_CMD src/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css ;;
+    "watch:scss") $self build:scss&& $WATCH_CMD --silent 'src/**/*.scss' -c "$self build:scss" ;;
+    "build:scss") [ -f src/${DEFAULT_NAME}.scss ] && $SASS_CMD src/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css ;;
 
     # app feature
     "watch:html") $self build:html && $WATCH_CMD --silent app/* -c "$self build:html" ;;
-    "build:html") $self prep && cp app/index.html release/ ;;
-    "watch:app")  $self prep && $self build:app && $WATCHIFY_CMD app/index.js -d -o "$EXORCIST_CMD release/app.js.map > release/app.js" ;;
-    "build:app")  $self prep && $BROWSERIFY_CMD app/index.js -d | $EXORCIST_CMD release/app.js.map > release/app.js ;;
-    "livereload") $self prep && $WATCH_CMD --silent release/* -c 'curl -s http://localhost:35729/changed\?files\=index.html' ;;
+    "build:html") cp app/index.html release/ ;;
+    "watch:app")  $self build:app && $WATCHIFY_CMD app/index.js -d -o "$EXORCIST_CMD release/app.js.map > release/app.js" ;;
+    "build:app")  $BROWSERIFY_CMD app/index.js -d | $EXORCIST_CMD release/app.js.map > release/app.js ;;
+    "livereload") $WATCH_CMD --silent release/* -c 'curl -s http://localhost:35729/changed\?files\=index.html' ;;
 
     # entry points
     "start"|"watch")
@@ -108,7 +110,6 @@ case $command in
         fi
 
         $self clean &&
-        $self prep &&
         $PARALLEL_CMD ::: "${features[@]}"
         ;;
 
