@@ -1,6 +1,23 @@
 #!/bin/bash -e
 
 #################################################################################
+# environment checks for parallel and jq
+# TODO: don't check on *every* run...that's a lot of checks
+which parallel > /dev/null
+if [ $? -gt 0 ]; then
+    echo "!! parallel not found.  installing..."
+    brew install parallel
+    mkdir -p ~/.parallel
+    touch ~/.parallel/will-cite
+fi
+
+which jq > /dev/null
+if [ $? -gt 0 ]; then
+    echo "!! jq not found.  installing..."
+    brew install jq
+fi
+
+#################################################################################
 # configuration (export because `parallel`)
 export TAPE_CMD=node_modules/tape/bin/tape
 export KARMA_CMD=node_modules/karma/bin/karma
