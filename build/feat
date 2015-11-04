@@ -75,6 +75,7 @@ case $featname in
             tiny-lr
             connect-livereload
             node-sass
+            yargs
         )
 
         case $featcmd in

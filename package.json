@@ -24,7 +24,6 @@
   "dependencies": {},
   "devDependencies": {
     "chokidar-cli": "~1.0.1",
-    "tape": "~4.2.1",
-    "yargs": "~3.26.0"
+    "tape": "~4.2.1"
   }
 }
