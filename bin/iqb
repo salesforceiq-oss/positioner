@@ -119,11 +119,11 @@ case $command in
         features=("$self watch:test")
 
         if [ "$FEAT_APP" = "true" ]; then
-            features+=(\
-                "$self watch:app" \
-                "$self watch:html" \
-                "$self watch:scss" \
-                "$self watch:js" \
+            features+=(
+                "$self watch:app"
+                "$self watch:html"
+                "$self watch:scss"
+                "$self watch:js"
                 "$self serve"
             );
         fi
@@ -135,11 +135,11 @@ case $command in
         features=("$self assets" "$self test")
 
         if [ "$FEAT_APP" = "true" ]; then
-            features+=( \
-                "$self build:scss" \
-                "$self build:js" \
-                "$self build:app" \
-                "$self build:html" \
+            features+=(
+                "$self build:scss"
+                "$self build:js"
+                "$self build:app"
+                "$self build:html"
             );
         fi
 
