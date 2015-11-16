@@ -99,13 +99,10 @@ case $command in
     "build:js")   $BROWSERIFY_CMD $ENTRY_POINT -d | $EXORCIST_CMD release/${DEFAULT_NAME}.js.map > release/${DEFAULT_NAME}.js ;;
 
     # scss feature
-    "watch:scss") $self build:scss&& $WATCH_CMD --silent 'src/**/*.scss' -c "$self build:scss" ;;
-    "build:scss") [ -f src/${DEFAULT_NAME}.scss ] && $SASS_CMD src/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css ;;
-
     "watch:scss") $self build:scss && $WATCH_CMD --silent 'src/**/*.scss' -c "$self build:scss" ;;
     "build:scss")
-        [ -f src/styles/${DEFAULT_NAME}.scss ] && $SASS_CMD src/styles/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css
-        [ -f src/styles/app.scss ] && $SASS_CMD src/styles/app.scss > release/app.css
+        [ -f src/scss/${DEFAULT_NAME}.scss ] && $SASS_CMD src/scss/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css
+        [ -f src/scss/app.scss ] && $SASS_CMD src/scss/app.scss > release/app.css
         ;;
 
     # app feature
