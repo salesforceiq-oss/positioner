@@ -29,11 +29,11 @@ export SASS_CMD=node_modules/node-sass/bin/node-sass
 PARALLEL_CMD='parallel --line-buffer --halt 2'
 
 # read some names out of the package.json
-export ENTRY_POINT=$(cat package.json | jq -r .main);
-export DEFAULT_NAME=$(cat package.json | jq -r .name);
+export ENTRY_POINT=$(jq -r .main package.json);
+export DEFAULT_NAME=$(jq -r .name package.json);
 
 # configuration settings
-export FEAT_APP=$(cat package.json | jq -r .iqproj.app)
+export FEAT_APP=$(jq -r .iqproj.app package.json)
 
 self=$0
 command=$1
