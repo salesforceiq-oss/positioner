@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 #################################################################################
 # environment checks for parallel and jq
@@ -71,6 +71,7 @@ fi
 #################################################################################
 # Built-in [standard] commands
 # Any of these can be overridden by creating a `build/<taskname>` file
+set -e
 case $command in
     # npm lifecycle commands
     "test")
