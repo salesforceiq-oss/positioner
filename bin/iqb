@@ -1,5 +1,15 @@
 #!/bin/bash
 
+self=$0
+command=$1
+shift
+
+# allow normal shell commands to be executed (eg: npm install)
+# # when the script is used as an ENTRYPOINT for a docker container
+if [ "$command" = "exec" ]; then
+    exec "$@"
+fi
+
 #################################################################################
 # environment checks for parallel and jq
 # TODO: don't check on *every* run...that's a lot of checks
@@ -34,10 +44,6 @@ export DEFAULT_NAME=$(jq -r .name package.json);
 
 # configuration settings
 export FEAT_APP=$(jq -r .iqproj.app package.json)
-
-self=$0
-command=$1
-shift
 
 #################################################################################
 # utilities
