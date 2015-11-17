@@ -108,8 +108,8 @@ case $command in
     # scss feature
     "watch:scss") $self build:scss && $WATCH_CMD --silent 'src/**/*.scss' -c "$self build:scss" ;;
     "build:scss")
-        [ -f src/scss/${DEFAULT_NAME}.scss ] && $SASS_CMD src/scss/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css
-        [ -f src/scss/app.scss ] && $SASS_CMD src/scss/app.scss > release/app.css
+        [ -f src/scss/${DEFAULT_NAME}.scss ] && ($SASS_CMD src/scss/${DEFAULT_NAME}.scss > release/${DEFAULT_NAME}.css || exit 1);
+        [ -f src/scss/app.scss ] && ($SASS_CMD src/scss/app.scss > release/app.css || exit 1);
         ;;
 
     # app feature
