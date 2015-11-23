@@ -121,6 +121,13 @@ case $featname in
         esac
     ;;
 
+    'templates')
+        case $featcmd in
+            'enable')  npm install --save-dev ng-html2js ;;
+            'disable') npm uninstall --save-dev ng-html2js ;;
+        esac
+    ;;
+
     'headless')
         case $featcmd in
             'enable')

@@ -44,6 +44,7 @@ export DEFAULT_NAME=$(jq -r .name package.json);
 
 # configuration settings
 export FEAT_APP=$(jq -r .iqproj.app package.json)
+export FEAT_TEMPLATES=$(jq -r .iqproj.templates package.json)
 
 #################################################################################
 # utilities
@@ -94,6 +95,23 @@ case $command in
     "clean")      rm -rf release/* ;;
     "assets")     [ -d src/assets ] && cp -R src/assets release ;;
 
+    "templates")
+        # this task is gross. don't use it. we needed it for back-compat
+        mkdir -p tmp
+        outfile=$(pwd)/tmp/templates.js
+        nghtml2js=$(pwd)/node_modules/ng-html2js/bin/ng-html2js
+        echo > $outfile
+
+        for template in $(find src | grep '.html'); do
+            pushd $(dirname $template) > /dev/null # —_—
+                $nghtml2js -m "templates" $(basename $template) >> $outfile
+            popd > /dev/null
+        done
+        ;;
+    "watch:templates")
+        $WATCH_CMD --silent ${1-src/**/*.html} -c "$self templates"
+        ;;
+
     # testing
     "watch:test") 
         if [ "$FEAT_APP" = "true" ]; then
@@ -128,6 +146,10 @@ case $command in
 
     # entry points
     "start"|"watch")
+        if [ "$FEAT_TEMPLATE" = "true" ]; then
+            $self "templates"
+        fi
+
         features=("$self assets" "$self watch:test")
 
         if [ "$FEAT_APP" = "true" ]; then
@@ -140,10 +162,18 @@ case $command in
             );
         fi
 
+        if [ "$FEAT_TEMPLATE" = "true" ]; then
+            features+=("$self watch:templates")
+        fi
+
         $PARALLEL_CMD ::: "${features[@]}"
         ;;
 
     "build")
+        if [ "$FEAT_TEMPLATE" = "true" ]; then
+            $self "templates"
+        fi
+
         features=("$self assets" "$self test")
 
         if [ "$FEAT_APP" = "true" ]; then
