@@ -100,13 +100,16 @@ case $command in
         mkdir -p tmp
         outfile=$(pwd)/tmp/templates.js
         nghtml2js=$(pwd)/node_modules/ng-html2js/bin/ng-html2js
-        echo > $outfile
+        echo "module.exports = (function() {" > $outfile
 
         for template in $(find src | grep '.html'); do
             pushd $(dirname $template) > /dev/null # —_—
                 $nghtml2js -m "templates" $(basename $template) >> $outfile
             popd > /dev/null
         done
+
+        echo "return module;" >> $outfile
+        echo "})();" >> $outfile
         ;;
     "watch:templates")
         $WATCH_CMD --silent ${1-src/**/*.html} -c "$self templates"
@@ -146,7 +149,7 @@ case $command in
 
     # entry points
     "start"|"watch")
-        if [ "$FEAT_TEMPLATE" = "true" ]; then
+        if [ "$FEAT_TEMPLATES" = "true" ]; then
             $self "templates"
         fi
 
@@ -170,7 +173,7 @@ case $command in
         ;;
 
     "build")
-        if [ "$FEAT_TEMPLATE" = "true" ]; then
+        if [ "$FEAT_TEMPLATES" = "true" ]; then
             $self "templates"
         fi
 
