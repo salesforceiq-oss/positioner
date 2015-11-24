@@ -99,18 +99,20 @@ case $command in
         # this task is gross. don't use it. we needed it for back-compat
         mkdir -p tmp
         outfile=$(pwd)/tmp/templates.js
-        nghtml2js=$(pwd)/node_modules/ng-html2js/bin/ng-html2js
-        echo "module.exports = (function() {" > $outfile
 
-        for template in $(find src | grep '.html'); do
-            pushd $(dirname $template) > /dev/null # —_—
-                $nghtml2js -m "templates" $(basename $template) >> $outfile
-            popd > /dev/null
-        done
-
-        echo "return module;" >> $outfile
-        echo "})();" >> $outfile
+        echo 'module.exports = angular.module("templates", []).run(function($templateCache) {' > $outfile
+        find src \
+            | grep '.html' \
+            | xargs -P 6 -n 1 -I{} bash -c 'echo "$(basename {}) {}"' \
+            | xargs -P 6 -n 2 node -e "console.log( \
+                '    \$templateCache.put(\"' + process.argv[1] + '\", ', \
+                JSON.stringify(require('fs').readFileSync(process.argv[2]).toString()), \
+                ');' \
+              );" \
+            >> $outfile
+        echo '});' >> $outfile
         ;;
+
     "watch:templates")
         $WATCH_CMD --silent ${1-src/**/*.html} -c "$self templates"
         ;;
