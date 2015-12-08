@@ -151,11 +151,12 @@ case $command in
 
     # entry points
     "start"|"watch")
+        features=("$self assets" "$self watch:test")
+
         if [ "$FEAT_TEMPLATES" = "true" ]; then
             $self "templates"
+            features+=("$self watch:templates")
         fi
-
-        features=("$self assets" "$self watch:test")
 
         if [ "$FEAT_APP" = "true" ]; then
             features+=(
