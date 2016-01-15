@@ -1,17 +1,16 @@
 {
-  "name": "bedrock",
+  "name": "positioner",
   "version": "0.0.1",
   "description": "a template for basic js packages",
   "main": "src/index.js",
-  "author": "webdevs@salesforceiq.com",
+  "author": "aliatsis@salesforce.com",
   "license": "MIT",
-  "homepage": "https://github.com/relateiq/bedrock",
+  "homepage": "https://github.com/relateiq/positioner",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/relateiq/bedrock.git"
+    "url": "https://github.com/relateiq/positioner.git"
   },
   "bugs": {
-    "url": "https://github.com/relateiq/bedrock/issues"
+    "url": "https://github.com/relateiq/positioner/issues"
   },
   "iqproj": {
     "app": false
@@ -26,5 +25,8 @@
   "devDependencies": {
     "chokidar-cli": "~1.0.1",
     "tape": "~4.2.1"
+  },
+  "publishConfig": {
+    "registry": "https://relateiq.artifactoryonline.com/relateiq/api/npm/npm-local/"
   }
 }
