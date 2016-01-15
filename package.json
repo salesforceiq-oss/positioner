@@ -1,9 +1,9 @@
 {
   "name": "positioner",
   "version": "0.0.1",
-  "description": "a template for basic js packages",
+  "description": "Optimally positions a DOM element relative to another element",
   "main": "src/index.js",
-  "author": "aliatsis@salesforce.com",
+  "author": "Anthony Liatsis <anthony.liatsis@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/relateiq/positioner",
   "repository": {
@@ -21,7 +21,9 @@
     "preversion": "bin/iqb build",
     "postpublish": "git push"
   },
-  "dependencies": {},
+  "dependencies": {
+    "capitalize": "~1.0.0"
+  },
   "devDependencies": {
     "chokidar-cli": "~1.0.1",
     "tape": "~4.2.1"
