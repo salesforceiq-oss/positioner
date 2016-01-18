@@ -1,6 +1,6 @@
 {
   "name": "positioner",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Optimally positions a DOM element relative to another element",
   "main": "src/index.js",
   "author": "Anthony Liatsis <anthony.liatsis@gmail.com>",
