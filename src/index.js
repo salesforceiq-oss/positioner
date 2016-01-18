@@ -1,5 +1,5 @@
 var capitalize = require('capitalize');
-var transitionEnd = require('@util/transition-end');
+var transitionEnd = require('transition-end');
 
 var polarPositions = {
     bottom: 'top',
@@ -24,7 +24,7 @@ var showStyles = {
  *      elementCushion: (int) pixels of space to give the 'elem' in its relative direction
  *      arrowElement: (jq element) arrow (nose triangle) element
  */
-module.exports = function position(elem, relativeElem, options) {
+module.exports = function positioner(elem, relativeElem, options) {
     var elemBCR = getVisibleBCR(elem);
     var relElemBCR = getVisibleBCR(relativeElem);
     options = options || {};

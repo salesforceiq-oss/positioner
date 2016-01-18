@@ -18,8 +18,19 @@
     "progress"
   ],
   "browsers": [
-    "PhantomJS"
+    "PhantomJS_custom"
   ],
+  "customLaunchers": {
+    "PhantomJS_custom": {
+      "base": "PhantomJS",
+      "options": {
+        "viewportSize": {
+          "width": 1000,
+          "height": 1000
+        }
+      }
+    }
+  },
   "junitReporter": {
     "outputFile": "test_out/unit.xml",
     "suite": "unit"
